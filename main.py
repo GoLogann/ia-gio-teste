@@ -84,7 +84,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(api_router, dependencies=[Depends(validate_jwt_token)])
+# app.include_router(api_router, dependencies=[Depends(validate_jwt_token)])
 
 app.include_router(external_router)
 
