@@ -20,14 +20,10 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Copiar os certificados para o diretório correto
 COPY kubernetes/certs/*.crt /usr/local/share/ca-certificates/
-COPY kubernetes/certs/combined_certificates.pem /app/certs/combined_certificates.pem
+COPY kubernetes/certs/combined_certificates.pem /usr/local/share/ca-certificates/combined_certificates.crt
 
-# Atualizar os certificados CA
 RUN update-ca-certificates
-
-# Configuração do OpenSSL
 RUN echo "openssl_conf = default_conf" >> /etc/ssl/openssl.cnf && \
     echo "" >> /etc/ssl/openssl.cnf && \
     echo "[default_conf]" >> /etc/ssl/openssl.cnf && \
@@ -58,5 +54,4 @@ RUN pip install --upgrade pip && \
 
 COPY . .
 
-# Rodar a API com SSL usando o arquivo combinado
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "443", "--ssl-keyfile", "/app/certs/combined_certificates.pem", "--ssl-certfile", "/app/certs/combined_certificates.pem"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
