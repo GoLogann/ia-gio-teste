@@ -20,18 +20,20 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+COPY kubernetes/certs/SectigoRSADomainValidationSecureServerCA.crt /usr/local/share/ca-certificates/
+COPY kubernetes/certs/USERTrustRSAAAACA.crt /usr/local/share/ca-certificates/
+RUN update-ca-certificates
+
 COPY kubernetes/certs/private.key /app/certs/private.key
 COPY kubernetes/certs/combined_certificates.pem /app/certs/combined_certificates.pem
 
-RUN update-ca-certificates && \
-    echo "openssl_conf = default_conf" >> /etc/ssl/openssl.cnf && \
-    echo "" >> /etc/ssl/openssl.cnf && \
+RUN chmod 400 /app/certs/private.key
+
+RUN echo "openssl_conf = default_conf" >> /etc/ssl/openssl.cnf && \
     echo "[default_conf]" >> /etc/ssl/openssl.cnf && \
     echo "ssl_conf = ssl_sect" >> /etc/ssl/openssl.cnf && \
-    echo "" >> /etc/ssl/openssl.cnf && \
     echo "[ssl_sect]" >> /etc/ssl/openssl.cnf && \
     echo "system_default = system_default_sect" >> /etc/ssl/openssl.cnf && \
-    echo "" >> /etc/ssl/openssl.cnf && \
     echo "[system_default_sect]" >> /etc/ssl/openssl.cnf && \
     echo "MinProtocol = TLSv1.2" >> /etc/ssl/openssl.cnf && \
     echo "CipherString = DEFAULT@SECLEVEL=2" >> /etc/ssl/openssl.cnf
@@ -51,5 +53,4 @@ RUN pip install --upgrade pip && \
 
 COPY . .
 
-# Comando para iniciar o servidor HTTPS
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080", "--ssl-keyfile", "/app/certs/private.key", "--ssl-certfile", "/app/certs/combined_certificates.pem"]
