@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iagio-deployment
+  labels:
+    app: iagio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iagio
+  template:
+    metadata:
+      labels:
+        app: iagio
+    spec:
+      containers:
+        - name: iagio
+          imagePullPolicy: Always
+          image: emagesolucoes/gtconsultoria-ia-gio:@SED_VERSION
+          resources:
+            requests:
+              memory: "2Gi"
+              cpu: "500m"
+            limits:
+              memory: "4Gi"
+              cpu: "1"
+          envFrom:
+            - configMapRef:
+                name: iagio-config
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: config-vol
+              mountPath: /app/resources/config.hml.yaml
+              subPath: config.hml.yaml
+              readOnly: true
+          env:
+            - name: ENV
+              value: "hml"
+      volumes:
+        - name: config-vol
+          configMap:
+            name: iagio-config

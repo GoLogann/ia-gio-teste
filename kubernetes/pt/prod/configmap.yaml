@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: iagio-config
+  labels:
+    app: iagio
+data:
+  config.prod.yaml: |
+    app:
+          name: Plataforma GT - Gio
+          version: @SED_VERSION
+    logger:
+          level: debug
+          encoding: console
+    http:
+          enabled: true
+          port: 8080
+    db:
+          enabled: true
+          type: postgres
+          showsql: true
+          schema: gio
+          connectionstring: "postgresql+psycopg2://@DB_USERNAME:@DB_PASSWORD@plataformagt-db.cm90sapdvq98.sa-east-1.rds.amazonaws.com:5432/plataformagt_pt"
+    qdrant:
+          qdrantclient: "http://qdrant-service:6333"
+    kafka:
+          brokersurls: kafka.plataformagt.internal:9092
+    minio:
+          host: minio.plataformagt.internal:9000
+          accesskeyid: @MINIO_ACCESS_KEY
+          secretaccesskey: @MINIO_SECRET_KEY
+          usessl: false
+    security:
+          enabled: true
+          clientid: @SSO_CLIENTID
+          clientsecret: @SSO_CLIENTSECRET
+          tokenuri: https://sso-plataformagt.gtgroup.tech/realms/plataformagt/protocol/openid-connect/token
+          jwkuri: https://sso-plataformagt.gtgroup.tech/realms/plataformagt/protocol/openid-connect/certs
+    api:
+          mensageriaurl: http://mensageria-service/api
+          administrativourl: http://administrativo-service/api
+          projetourl: http://projeto-service/api
+          authmanagerurl: http://authmanager-service/api/v1
+    whatsapp:
+          token: EAAWvBrSNZBloBOZBoJDEPOufZCs9mRkbKuS9XydHcW9hpzfB4t4nZAhHNoTI6z8QM9qnWSqWkPhG5aBCOZBu6ZCSUsZAZAnxQhQ45pnbMEcWgWdF6aZAmRhvx6TFlGV5FBpYfnnuU6XEcfsIn3bvrN6uUhhVlLfcl9QTVjXPUUCutbQTS9uRalXCJ1xyoBRFTCyS5YAZDZD
+          phoneid: 197548720118848
+          messagingproduct: whatsapp
+          recipienttype: individual
+    timezone:
+          name: "America/Sao_Paulo"

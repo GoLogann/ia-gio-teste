@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: iagio-config
+    labels:
+        app: iagio
+data:
+    config.hml.yaml: |
+      app:
+        name: Plataforma GT - Gio
+        version: @SED_VERSION
+      logger:
+        level: debug
+        encoding: console
+      http:
+        enabled: true
+        port: 8080
+      db:
+        enabled: true
+        type: postgres
+        showsql: true
+        schema: gio
+        connectionstring: "postgresql+psycopg2://@DB_USERNAME:@DB_PASSWORD@10.10.11.202:5432/plataformagt"
+      qdrant:
+        qdrantclient: "http://localhost:6333"
+      kafka:
+        brokersurls: kafka.dgtallab.com.br:9092
+      minio:
+        host: 10.10.11.201:9090
+        accesskeyid: @MINIO_ACCESS_KEY
+        secretaccesskey: @MINIO_SECRET_KEY
+        usessl: false
+      security:
+        enabled: true
+        clientid: @SSO_CLIENTID
+        clientsecret: @SSO_CLIENTSECRET
+        tokenuri: http://sso.dgtallab.com.br:30186/realms/plataformagt/protocol/openid-connect/token
+        jwkuri: http://sso.dgtallab.com.br:30186/realms/plataformagt/protocol/openid-connect/certs
+      api:
+        mensageriaurl: http://mensageria-service/api
+        administrativourl: http://administrativo-service/api
+        projetourl: http://projeto-service/api
+        authmanagerurl: http://authmanager-service/api/v1
+      timezone:
+        name: "America/Sao_Paulo"

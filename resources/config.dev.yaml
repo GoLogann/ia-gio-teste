@@ -1,0 +1,52 @@
+app:
+  name: Plataforma GT - Gio
+  version: 1.2.0
+logger:
+  level: debug
+  encoding: console
+http:
+  enabled: true
+  port: 8081
+db:
+  enabled: true
+  type: postgres
+  showsql: true
+  schema: gio
+  connectionstring: "postgresql+psycopg2://appgt:plataformagt@localhost:5432/plataformagt"
+qdrant:
+  qdrantclient: "http://localhost:6333"
+kafka:
+  brokersurls: localhost:29092
+  topic:
+    queuesendingmessages: "queue-sending-messages"
+    sendswarmcontactgio: "enviar-enxame-contato-gio"
+    dialoguesswarmgio: "dialogos-enxame-gio"
+redis:
+  host: localhost
+  port: 6379
+  db: 0
+minio:
+  host: localhost:9011
+  accesskeyid: minio
+  secretaccesskey: minio123
+  usessl: false
+security:
+  enabled: true
+  clientid: developer
+  clientsecret: J1ulJo097CM25nWJo5sQ1MlMyJwkOPvs
+  tokenuri: http://sso-plataformagt.gtgroup.tech/realms/plataformagt/protocol/openid-connect/token
+  jwkuri: http://sso-plataformagt.gtgroup.tech/realms/plataformagt/protocol/openid-connect/certs
+api:
+  mensageriaurl: http://localhost:8086/api
+  administrativourl: http://localhost:8081/api
+  projetourl: http://localhost:8082/api
+  authmanagerurl: http://localhost:8083/api/v1
+  whatsappurl: https://graph.facebook.com/v20.0
+whatsapp:
+  token: EAAWvBrSNZBloBO3WKxDRq1ZBuhSMxXRAQ0ZAoWr1BI2IJ7fMXx58BxFMf2la1ZCGjaXqzypgdxA9ConhUzDaesErZB3RJpgWJ1DCq9mT8n8fcnCkAeURd2VbBbvxq0tpZAbEVsOAZArd4AcRPuAOMFIYUROyk1ec96XcTxlprKlE0t3p3AUQ1fdkZCSPznCBb3ZAtAAZDZD
+  verificationtoken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+  phoneid: 498918989963744
+  messagingproduct: whatsapp
+  recipienttype: individual
+timezone:
+  name: "America/Sao_Paulo"

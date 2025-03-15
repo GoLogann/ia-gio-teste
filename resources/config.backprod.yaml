@@ -1,0 +1,35 @@
+app:
+  name: Plataforma GT - Gio
+  version: @SED_VERSION
+logger:
+  level: error
+  encoding: json
+http:
+  enabled: true
+  port: 8080
+db:
+  enabled: true
+  type: postgres
+  showsql: false
+  schema: gio
+  connectionstring: "postgresql+psycopg2://appgt:senha_secreta@prod-db-server:5432/plataformagt"
+qdrant:
+  qdrantclient: "http://qdrant-prod-server:6333"
+kafka:
+  brokersurls: kafka-prod:29092
+minio:
+  host: minio-prod:9011
+  accesskeyid: prod_minio
+  secretaccesskey: prod_minio_secret
+  usessl: true
+security:
+  enabled: true
+  clientid: @SSO_CLIENTID
+  clientsecret: @SSO_CLIENTSECRET
+  tokenuri: http://sso-plataformagt.gtconsultoria.com.br/realms/plataformagt/protocol/openid-connect/token
+  jwkuri: http://sso-plataformagt.gtconsultoria.com.br/realms/plataformagt/protocol/openid-connect/certs
+api:
+  administrativourl: http://administrativo-plataformagt.gtconsultoria.com.br/api
+  authmanagerurl: https://authmanager-plataformagt.gtgroup.tech/api/v1
+timezone:
+  name: "America/Sao_Paulo"

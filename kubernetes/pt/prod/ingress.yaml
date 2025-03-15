@@ -1,0 +1,37 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: iagio-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: iagio-plataformagt-pt.dgtallab.com.br
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: iagio-service
+                port:
+                  number: 80
+    - host: iagio-plataformagt-pt.gtgroup.gt
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: iagio-service
+                port:
+                  number: 80
+    - host: iagio-plataformagt-pt.gtgroup.tech
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: iagio-service
+                port:
+                  number: 80

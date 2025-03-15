@@ -1,0 +1,95 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iagio-deployment
+  labels:
+    app: iagio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iagio
+  template:
+    metadata:
+      labels:
+        app: iagio
+    spec:
+      containers:
+        - name: iagio
+          imagePullPolicy: Always
+          image: emagesolucoes/gtconsultoria-ia-gio:@SED_VERSION
+          resources:
+            requests:
+              memory: "2048Mi"
+              cpu: "1000m"
+            limits:
+              memory: "4096Mi"
+              cpu: "2000m"
+          envFrom:
+            - configMapRef:
+                name: iagio-config
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: config-vol
+              mountPath: /app/resources/config.prod.yaml
+              subPath: config.prod.yaml
+              readOnly: true
+          env:
+            - name: ENV
+              value: "prod"
+            - name: SSL_CERT_DIR
+              value: "/etc/ssl/certs/"
+            - name: SSL_CERT_FILE
+              value: "/etc/ssl/certs/ca-certificates.crt"
+            - name: REQUESTS_CA_BUNDLE
+              value: "/etc/ssl/certs/ca-certificates.crt"
+            - name: CURL_CA_BUNDLE
+              value: "/etc/ssl/certs/ca-certificates.crt"
+            - name: KEYCLOAK_URL
+              value: "https://sso-plataformagt.gtgroup.tech/realms/plataformagt/protocol/openid-connect/token"
+            - name: KEYCLOAK_CLIENT_ID
+              value: "@SSO_CLIENTID"
+            - name: KEYCLOAK_CLIENT_SECRET
+              value: "@SSO_CLIENTSECRET"
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: "kafka.plataformagt.internal:9092"
+            - name: KAFKA_TOPIC
+              value: "processar-form-mcti"
+            - name: KAFKA_GROUP_ID
+              value: "plataformagt"
+            - name: MINIO_BUCKET
+              value: "projeto"
+            - name: MINIO_ACESS_KEY
+              value: "@MINIO_ACCESS_KEY"
+            - name: MINIO_SECRET_KEY
+              value: "@MINIO_SECRET_KEY"
+            - name: MINIO_SERVER
+              value: "minio.plataformagt.internal:9000"
+            - name: MINIO_SSL
+              value: "false"
+            - name: API_URL
+              value: "http://projeto-service/api"
+            - name: SELENIUM_FORM_URL
+              value: "https://formpd.mcti.gov.br"
+            - name: CHROME_DRIVER_PATH
+              value: "resources/chromedriver/chromedriver"
+            - name: CHROME_DRIVER_VERSION
+              value: "126.0.6478.182"
+            - name: HEADLESS
+              value: "true"
+            - name: TIMEOUT_PAGE_SECONDS
+              value: "14400"
+            - name: SLEEP_LOAD_SECONDS
+              value: "10"
+            - name: SLEEP_BETWEEN_STEPS_SECONDS
+              value: "5"
+            - name: SLEEP_BETWEEN_PAGE_LOAD_SECONDS
+              value: "20"
+            - name: MAX_ATTEMPTS
+              value: "10"
+      volumes:
+        - name: config-vol
+          configMap:
+            name: iagio-config

@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qdrant-deployment
+  labels:
+    app: qdrant
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: qdrant
+  template:
+    metadata:
+      labels:
+        app: qdrant
+    spec:
+      containers:
+        - name: qdrant
+          imagePullPolicy: Always
+          image: qdrant/qdrant:v1.12.0
+          resources:
+            requests:
+              memory: "2048Mi"
+              cpu: "1000m"
+            limits:
+              memory: "4096Mi"
+              cpu: "2000m"
+          ports:
+            - containerPort: 6333
+            - containerPort: 6334

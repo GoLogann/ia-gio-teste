@@ -1,0 +1,10 @@
+from fastapi import APIRouter
+from controller.v2 import whatsapp_controller, consultar_administrativo
+from controller.v2.swarn_webchat_controller import swarn_webchat_public_router
+from controller.v2.innovation_award_webchat_controller import innovation_award_router
+
+external_router = APIRouter()
+external_router.include_router(whatsapp_controller.whatsapp_router)
+external_router.include_router(swarn_webchat_public_router)
+external_router.include_router(innovation_award_router)
+external_router.include_router(consultar_administrativo.adm)
