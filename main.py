@@ -33,19 +33,19 @@ logging.basicConfig(
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logger.info("Gerando Token...")
-    oauth, token = setup_auth_client()
-    app.state.oauth_client = oauth
-    app.state.token = token
-
-    logger.info("Iniciando serviço de renovação de token...")
-    token_task = asyncio.create_task(refresh_oauth_token(app))
-
-    logger.info("Iniciando Database...")
-    db = get_session()
-    qdrant_db = get_qdrant_client()
-    app.state.db_client = db
-    app.state.qdrant_client = qdrant_db
+    # logger.info("Gerando Token...")
+    # oauth, token = setup_auth_client()
+    # app.state.oauth_client = oauth
+    # app.state.token = token
+    #
+    # logger.info("Iniciando serviço de renovação de token...")
+    # token_task = asyncio.create_task(refresh_oauth_token(app))
+    #
+    # logger.info("Iniciando Database...")
+    # db = get_session()
+    # qdrant_db = get_qdrant_client()
+    # app.state.db_client = db
+    # app.state.qdrant_client = qdrant_db
 
     # logger.info("Iniciando Kafka Consumer para processamento de dados...")
     # kafka_consumer = KafkaConsumerService(KAFKA_BROKERS_URLS, KAFKA_TOPIC_SEND_SWARM_CONTACT_GIO, db, qdrant_db)
@@ -64,8 +64,8 @@ async def lifespan(app: FastAPI):
     # await kafka_consumer.stop()
     # message_queue_task.cancel()
     # await message_queue_consumer.stop()
-    token_task.cancel()
-    await db.close()
+    # token_task.cancel()
+    # await db.close()
 
 app = FastAPI(
     title=app_config.get('name', 'IA GIO'),
