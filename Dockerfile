@@ -20,11 +20,11 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-COPY kubernetes/certs/*.crt /usr/local/share/ca-certificates/
-COPY kubernetes/certs/combined_certificates.pem /usr/local/share/ca-certificates/combined_certificates.crt
+COPY kubernetes/certs/private.key /app/certs/private.key
+COPY kubernetes/certs/combined_certificates.pem /app/certs/combined_certificates.pem
 
-RUN update-ca-certificates
-RUN echo "openssl_conf = default_conf" >> /etc/ssl/openssl.cnf && \
+RUN update-ca-certificates && \
+    echo "openssl_conf = default_conf" >> /etc/ssl/openssl.cnf && \
     echo "" >> /etc/ssl/openssl.cnf && \
     echo "[default_conf]" >> /etc/ssl/openssl.cnf && \
     echo "ssl_conf = ssl_sect" >> /etc/ssl/openssl.cnf && \
@@ -34,24 +34,22 @@ RUN echo "openssl_conf = default_conf" >> /etc/ssl/openssl.cnf && \
     echo "" >> /etc/ssl/openssl.cnf && \
     echo "[system_default_sect]" >> /etc/ssl/openssl.cnf && \
     echo "MinProtocol = TLSv1.2" >> /etc/ssl/openssl.cnf && \
-    echo "MaxProtocol = TLSv1.3" >> /etc/ssl/openssl.cnf && \
-    echo "CipherString = DEFAULT@SECLEVEL=2" >> /etc/ssl/openssl.cnf && \
-    echo "Options = UnsafeLegacyRenegotiation" >> /etc/ssl/openssl.cnf
+    echo "CipherString = DEFAULT@SECLEVEL=2" >> /etc/ssl/openssl.cnf
 
-ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
-ENV REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
-ENV CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
-ENV TZ=America/Sao_Paulo
-ENV PYTHONHTTPSVERIFY=1
-ENV PYTHONPATH=/app
-ENV OPENSSL_CONF=/etc/ssl/openssl.cnf
+ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt \
+    REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt \
+    CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt \
+    TZ=America/Sao_Paulo \
+    PYTHONHTTPSVERIFY=1 \
+    PYTHONPATH=/app \
+    OPENSSL_CONF=/etc/ssl/openssl.cnf
 
 COPY requirements.txt .
-
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir protobuf==4.21.12 && \
     pip install --no-cache-dir google-ai-generativelanguage certifi -r requirements.txt
 
 COPY . .
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+# Comando para iniciar o servidor HTTPS
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080", "--ssl-keyfile", "/app/certs/private.key", "--ssl-certfile", "/app/certs/combined_certificates.pem"]
